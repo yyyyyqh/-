@@ -28,12 +28,14 @@ def getfish(image_path, button_x, button_y, search_region, try_times, timeout):
         start_time = time.time()
         while True:
             try:
+                #confidence准确率 region识别范围, 非None就代表找到了
                 button7location = pyautogui.locateOnScreen(image_path, confidence=.97, region=search_region)
                 if button7location is None:
-                    # 超时检测, 10s
+                    # 超时检测
                     if time.time() - start_time >= timeout:
                         start_time = time.time()
                         break
+                    #time sleep的时间里, 不会增加耗时
                     time.sleep(0.2)
                 else:
                     pyautogui.moveTo(button_x, button_y, duration=0.1)
@@ -60,6 +62,7 @@ def start(func,  *args, **kwargs):
         print(f"Total elapsed time: {elapsed_time:.2f} seconds")
         #显示每次需要时间
         if isClose:
+            # print("close")
             sleepComputer()
 
 
@@ -92,7 +95,7 @@ def main():
     button_x = 2095  # Replace with actual X coordinate
     button_y = 1015  # Replace with actual Y coordinate
     search_region = (2053, 876, 2318, 1133)
-    timeout = 10  # 超时时间
+    timeout = 5  # 超时时间
 
     #显示游戏窗口
     activateWindow()
@@ -103,6 +106,8 @@ def main():
     try_times = simpledialog.askinteger("Input", "Please enter the number of fishing attempts:")
     global isClose
     isClose = messagebox.askyesno("Shutdown", "Do you want to shutdown the computer after the script completes?")
+    if isClose is None:
+        isClose = False
     root.destroy()
 
     #getfish
