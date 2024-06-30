@@ -28,23 +28,25 @@ def getfish(image_path, button_x, button_y, search_region, try_times, timeout):
         start_time = time.time()
         while True:
             try:
-                #confidence准确率 region识别范围, 非None就代表找到了
-                button7location = pyautogui.locateOnScreen(image_path, confidence=.97, region=search_region)
-                if button7location is None:
-                    # 超时检测
-                    if time.time() - start_time >= timeout:
-                        start_time = time.time()
-                        break
-                    #time sleep的时间里, 不会增加耗时
-                    time.sleep(0.2)
-                else:
-                    pyautogui.moveTo(button_x, button_y, duration=0.1)
-                    pyautogui.leftClick()
-                    print("found")
-                    try_time += 1
-                    break
+                #confidence准确率 region识别范围
+                pyautogui.locateOnScreen(image_path, confidence=.97, region=search_region)
+                pyautogui.moveTo(button_x, button_y, duration=0.1)
+                pyautogui.leftClick()
+                print("found")
+                try_time += 1
+                break
+            #如果没检测到指定图片那么对直接执行异常里的语句
             except pyautogui.ImageNotFoundException:
-                print("not found")
+                end_time = time.time()
+                print(end_time)
+                # 超时检测
+                if end_time - start_time >= timeout:
+                    start_time = time.time()
+                    print("超时, 将重新执行")
+                    break
+                print("没找到, 等待0.2秒")
+                time.sleep(0.2)
+                # print("not found")
 
         time.sleep(3.5)
 
