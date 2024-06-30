@@ -25,28 +25,28 @@ def getfish(image_path, button_x, button_y, search_region, try_times, timeout):
         pyautogui.moveTo(button_x, button_y, duration=0.3)
         pyautogui.leftClick()
 
+        global start_time
         start_time = time.time()
         while True:
             try:
                 #confidence准确率 region识别范围
                 pyautogui.locateOnScreen(image_path, confidence=.97, region=search_region)
                 pyautogui.moveTo(button_x, button_y, duration=0.1)
+                #失败率较高
+                # pyautogui.moveTo(button_x, button_y, duration=0.01)
                 pyautogui.leftClick()
                 print("found")
                 try_time += 1
                 break
-            #如果没检测到指定图片那么对直接执行异常里的语句
+            #没检测到, 执行
+            #在异常增加太多代码会影响主句的判断, 导致无法收杆.
             except pyautogui.ImageNotFoundException:
-                end_time = time.time()
-                print(end_time)
-                # 超时检测
-                if end_time - start_time >= timeout:
-                    start_time = time.time()
-                    print("超时, 将重新执行")
-                    break
-                print("没找到, 等待0.2秒")
-                time.sleep(0.2)
-                # print("not found")
+                #如果不进行超时检测的话, 主要看设备的稳定性, 正常来说400次钓鱼能够顺利完成. 但有很多额外因素比如网络卡顿, 鼠标移动, 光圈收缩过快导致钓鱼中断.
+                pass
+
+                # if time.time() - start_time >= timeout:
+                #     start_time = time.time()
+                #     break
 
         time.sleep(3.5)
 
