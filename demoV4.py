@@ -102,15 +102,8 @@ def main():
     #显示游戏窗口
     activateWindow()
 
-
-    root = tk.Tk()
-    root.withdraw()  # 隐藏主窗口
-    try_times = simpledialog.askinteger("Input", "Please enter the number of fishing attempts:")
-    global isClose
-    isClose = messagebox.askyesno("Shutdown", "Do you want to shutdown the computer after the script completes?")
-    if isClose is None:
-        isClose = False
-    root.destroy()
+    #
+    try_times = 400;
 
     #getfish
     start(getfish, image_path, button_x, button_y, search_region, try_times, timeout)
