@@ -25,9 +25,9 @@ if __name__ == "__main__":
 
     start_time = time.time()
     # 指定区域的左上角坐标和宽高
-    left = 349
+    left = 331
     top = 163
-    width = 59
+    width = 56
     height = 29
 
     # 截取屏幕指定区域
