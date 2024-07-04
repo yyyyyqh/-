@@ -14,6 +14,10 @@ def capture_screen_region(left, top, width, height):
 def recognize_numbers(image):
     # 使用 pytesseract 识别图像中的内容
     text = pytesseract.image_to_string(image, config='--psm 6 digits')
+
+    #取前4位
+    text = text[:4]
+
     return text.strip()
 
 # 示例：截取屏幕指定位置并识别数字
@@ -21,10 +25,10 @@ if __name__ == "__main__":
 
     start_time = time.time()
     # 指定区域的左上角坐标和宽高
-    left = 2108
-    top = 486
-    width = 155
-    height = 50
+    left = 349
+    top = 163
+    width = 59
+    height = 29
 
     # 截取屏幕指定区域
     image = capture_screen_region(left, top, width, height)
@@ -33,5 +37,7 @@ if __name__ == "__main__":
     # 识别数字
     numbers = recognize_numbers(image)
     print("识别到的数字:", numbers)
+    if not numbers:
+        print("没识别到")
     end_time = time.time()
     print(end_time - start_time)
