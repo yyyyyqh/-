@@ -2,18 +2,14 @@ import pyautogui
 import time
 import pygetwindow as pw
 from pywinauto import application
-from tkinter import simpledialog, messagebox
-import tkinter as tk
+# from tkinter import simpledialog, messagebox
+# import tkinter as tk
 import ctypes #用于关机
+import pytesseract
+import winsound
 
-#在开始的钓鱼次数选项中添加一个boolean选项, 选择是否在完成后睡眠
-#一次大概是9.75秒, 考虑最后要不要添加一个超时后, 强制睡眠
-
-#文档
-#pyautogui
-#https://pyautogui.readthedocs.io/en/latest/search.html?q=locateOnScreen&check_keywords=yes&area=default
-
-
+#需要安装tesseract
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def getfish(image_path, button_x, button_y, search_region, try_times, timeout):
     try_time = 0
@@ -62,11 +58,13 @@ def start(func,  *args, **kwargs):
         elapsed_time = end_time - start_time
         #输出总共耗费时长
         print(f"Total elapsed time: {elapsed_time:.2f} seconds")
-        #显示每次需要时间
-        if isClose:
-            # print("close")
-            sleepComputer()
 
+        #响铃
+        # makeAlarm()
+
+        #执行睡眠
+        # if isClose:
+        #     sleepComputer()
 
 def activateWindow():
     # 获取游戏窗口
@@ -90,8 +88,31 @@ def sleepComputer():
     # 使系统进入睡眠模式，不强制，不禁用唤醒事件
     ctypes.windll.powrprof.SetSuspendState(False, True, True)
 
-def questionDash():
-    pass
+
+def getTrytimes():
+    left = 331
+    top = 163
+    width = 56
+    height = 29
+
+    # 截取屏幕指定区域
+    screenshot = pyautogui.screenshot(region=(left, top, width, height))
+    # screenshot.show()  # 显示截取的区域图像
+
+    # 识别数字
+    text = pytesseract.image_to_string(screenshot, config='--psm 6 digits')
+    text = text[:4]
+
+    print("识别到的数字:", text)
+
+    return int(text.strip())
+
+def makeAlarm():
+    count = 0
+    while count < 10:
+        winsound.Beep(1000, 300)
+
+
 def main():
     image_path = "button_green2.png"
     button_x = 2095  # Replace with actual X coordinate
@@ -103,7 +124,10 @@ def main():
     activateWindow()
 
     #
-    try_times = 400;
+    try_times = getTrytimes() // 10
+    print("次数为:"+str(try_times))
+    if not try_times:
+        try_times = 400
 
     #getfish
     start(getfish, image_path, button_x, button_y, search_region, try_times, timeout)
@@ -115,22 +139,8 @@ if __name__ == '__main__':
 
 #运行脚本, 将游戏画面置顶, 并弹出输入框输入钓鱼次数.✔️
 
-#完成任务后电脑进入睡眠
-# import os
-#
-# # Identify the operating system
-# os_name = platform.system()
-#
-# # Choose the appropriate sleep command based on the OS
-# if os_name == "Windows":
-#     sleep_command = "rundll32 powercpl.dll,SetSuspendState 0,1,0"
-# elif os_name == "Darwin":  # macOS
-#     sleep_command = "pmset sleepnow"
-# elif os_name == "Linux":  # Linux distributions may vary
-#     sleep_command = "sudo pm-suspend"
-# else:
-#     print("Unsupported operating system:", os_name)
-#     exit()
-#
-# # Execute the sleep command using os.system()
-# os.system(sleep_command)
+#完成任务后电脑进入睡眠✔️
+
+#自动识别可钓鱼次数✔️
+
+#完成后响铃✔️
