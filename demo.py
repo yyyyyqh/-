@@ -13,9 +13,8 @@ timeout = 10 #超时时间
 while True:
     if try_time >= try_times:
         print("任务完成!!!!")
-        break;
+        break
 
-    # time.sleep(0.5)
     pyautogui.moveTo(button_x, button_y, duration=0.3)
     pyautogui.leftClick()
 
@@ -39,17 +38,5 @@ while True:
                 break
         except pyautogui.ImageNotFoundException:
             print("not found")
-        # print(button7location)
-        # print("found")
-
-
+    #下一次循环
     time.sleep(3.5)
-
-
-
-# eg.1. 需要opencv
-# try:
-#     button7location = pyautogui.locateOnScreen('calc7key.png', grayscale=True, confidence=.8)
-#     print("found")
-# except pyautogui.ImageNotFoundException:
-#     print("not found")

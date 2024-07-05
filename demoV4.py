@@ -7,9 +7,10 @@ from pywinauto import application
 import ctypes #用于关机
 import pytesseract
 import winsound
+import keyboard
 
 #需要安装tesseract
-pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
+# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 def getfish(image_path, button_x, button_y, search_region, try_times, timeout):
     try_time = 0
@@ -37,7 +38,7 @@ def getfish(image_path, button_x, button_y, search_region, try_times, timeout):
             #没检测到, 执行
             #在异常增加太多代码会影响主句的判断, 导致无法收杆.
             except pyautogui.ImageNotFoundException:
-                #如果不进行超时检测的话, 主要看设备的稳定性, 正常来说400次钓鱼能够顺利完成. 但有很多额外因素比如网络卡顿, 鼠标移动, 光圈收缩过快导致钓鱼中断.
+                #耗时太长会导致钓鱼失败
                 pass
 
                 # if time.time() - start_time >= timeout:
@@ -84,33 +85,33 @@ def activateWindow():
         print(f"Activated window: {game_window.title}")
 
 
-def sleepComputer():
-    # 使系统进入睡眠模式，不强制，不禁用唤醒事件
-    ctypes.windll.powrprof.SetSuspendState(False, True, True)
+# def sleepComputer():
+#     # 使系统进入睡眠模式，不强制，不禁用唤醒事件
+#     ctypes.windll.powrprof.SetSuspendState(False, True, True)
 
 
-def getTrytimes():
-    left = 331
-    top = 163
-    width = 56
-    height = 29
+# def getTrytimes():
+#     left = 331
+#     top = 163
+#     width = 77
+#     height = 29
+#
+#     # 截取屏幕指定区域
+#     screenshot = pyautogui.screenshot(region=(left, top, width, height))
+#     # screenshot.show()  # 显示截取的区域图像
+#
+#     # 识别数字
+#     text = pytesseract.image_to_string(screenshot, config='--psm 6 digits')
+#     text = text[:4]
+#
+#     print("识别到的数字:", text)
+#
+#     return int(text.strip())
 
-    # 截取屏幕指定区域
-    screenshot = pyautogui.screenshot(region=(left, top, width, height))
-    # screenshot.show()  # 显示截取的区域图像
-
-    # 识别数字
-    text = pytesseract.image_to_string(screenshot, config='--psm 6 digits')
-    text = text[:4]
-
-    print("识别到的数字:", text)
-
-    return int(text.strip())
-
-def makeAlarm():
-    count = 0
-    while count < 10:
-        winsound.Beep(1000, 300)
+# def makeAlarm():
+#     count = 0
+#     while count < 10:
+#         winsound.Beep(1000, 300)
 
 
 def main():
@@ -123,11 +124,8 @@ def main():
     #显示游戏窗口
     activateWindow()
 
-    #
-    try_times = getTrytimes() // 10
-    print("次数为:"+str(try_times))
-    if not try_times:
-        try_times = 400
+    #手动设置次数
+    try_times = 400
 
     #getfish
     start(getfish, image_path, button_x, button_y, search_region, try_times, timeout)
@@ -136,11 +134,3 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-#运行脚本, 将游戏画面置顶, 并弹出输入框输入钓鱼次数.✔️
-
-#完成任务后电脑进入睡眠✔️
-
-#自动识别可钓鱼次数✔️
-
-#完成后响铃✔️

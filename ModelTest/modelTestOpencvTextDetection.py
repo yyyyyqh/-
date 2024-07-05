@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # 指定区域的左上角坐标和宽高
     left = 331
     top = 163
-    width = 56
+    width = 77
     height = 29
 
     # 截取屏幕指定区域
